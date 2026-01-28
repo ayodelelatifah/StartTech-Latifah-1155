@@ -17,11 +17,6 @@ jobs:
       with:
         go-version: '1.21'
 
-    # - name: Run Unit Tests
-    #  run: |
-    #    cd backend
-     #   go test ./...
-
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -39,6 +34,7 @@ jobs:
         ECR_REPOSITORY: starttech-backend-v2
         IMAGE_TAG: latest
       run: |
+        # The './backend' tells Docker to look inside the backend folder for the Dockerfile
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./backend
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
