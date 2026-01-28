@@ -40,4 +40,6 @@ jobs:
 
     - name: Update ECS Service
       run: |
-        aws ecs update-service --cluster starttech-cluster --service starttech-service-v2 --force-new-deployment --region us-east-1
+        CLUSTER_NAME=$(terraform output -raw ecs_cluster_name)
+        SERVICE_NAME=$(terraform output -raw ecs_service_name)
+        aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --force-new-deployment
