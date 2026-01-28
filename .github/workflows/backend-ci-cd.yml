@@ -3,8 +3,8 @@ name: Backend CI/CD Pipeline
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'backend/**'  # Only runs when backend code changes
+  paths:
+    - 'backend/**' 
 
 jobs:
   build-and-deploy:
@@ -19,7 +19,6 @@ jobs:
       with:
         go-version: '1.21'
 
-    # Phase 2 Requirement: Testing & Security Scanning
     - name: Run Unit Tests
       run: |
         cd backend
@@ -28,27 +27,25 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        aws_accesskey_id: ${{ secrets.AWS_ACCESSKEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_region: us-east-1
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
 
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
 
-    # Phase 2 Requirement: Build & Push Docker Image
     - name: Build and Push Docker Image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: starttech-backend # Ensure this matches your ECR repo name
+        # Using the secret name here as we discussed
+        ECR_REPOSITORY: starttech-backend-v2
         IMAGE_TAG: latest
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./backend
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-    # Phase 2 Requirement: Deploy using Rolling Update (ASG Refresh)
-    - name: Refresh Auto Scaling Group
+    - name: Update ECS Service
       run: |
-        aws autoscaling start-instance-refresh \
-          --auto-scaling-group-name starttech-backend-asg \
-          --preferences '{"MinHealthyPercentage": 50}'
+        # Note: Added -v2 to the service name to match your new Terraform config
+        aws ecs update-service --cluster starttech-cluster --service starttech-service-v2 --force-new-deployment --region us-east-1
