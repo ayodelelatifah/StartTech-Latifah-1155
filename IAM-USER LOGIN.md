@@ -2,5 +2,5 @@ IAM LOGIN
 Username: tutor-viewer
 Password: Start-Tech-Assessment
 
-ACCESS-SECRET-ID: lzwPdxD4EYmHUOBFqSvguR6mL+6/c2APuSTqPY6t
-ACCESS-KEY-ID: AKIATK6FRTMFBPIH5PFI
+ACCESS-SECRET-ID: ***************stored in Github Secrets
+ACCESS-KEY-ID: ***************stored in Github Secrets
