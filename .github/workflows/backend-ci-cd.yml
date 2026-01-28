@@ -34,8 +34,8 @@ jobs:
         ECR_REPOSITORY: starttech-backend-v2
         IMAGE_TAG: latest
       run: |
-        # This tells Docker exactly where the file is inside the backend folder
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./backend/Dockerfile ./backend
+        # We point to the specific subfolder you identified
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f backend/MuchToDo/Dockerfile backend/MuchToDo
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Update ECS Service
