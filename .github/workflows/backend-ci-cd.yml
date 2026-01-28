@@ -7,17 +7,6 @@ on:
       - 'backend/**' 
 
 jobs:
-
-
-name: Backend CI/CD Pipeline
-
-on:
-  push:
-    branches: [ "master" ]
-    paths:
-      - 'backend/**' 
-
-jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     
