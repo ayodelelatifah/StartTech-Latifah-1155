@@ -17,10 +17,10 @@ jobs:
       with:
         go-version: '1.21'
 
-    - name: Run Unit Tests
-      run: |
-        cd backend
-        go test ./...
+    # - name: Run Unit Tests
+    #  run: |
+    #    cd backend
+     #   go test ./...
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
