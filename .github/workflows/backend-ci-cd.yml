@@ -15,7 +15,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: '1.23' # Updated from 1.21 to meet project requirements
+        go-version: '1.24' # Updated to meet dependency requirements
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -34,7 +34,6 @@ jobs:
         ECR_REPOSITORY: starttech-backend-v2
         IMAGE_TAG: latest
       run: |
-        # Pointing to the specific subfolder where your Dockerfile lives
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f backend/MuchToDo/Dockerfile backend/MuchToDo
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
