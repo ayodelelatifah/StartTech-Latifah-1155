@@ -1,18 +1,15 @@
 # Build Stage
 FROM golang:1.24-alpine AS builder
-
-# Set working directory
 WORKDIR /app
 
-# Copy mod files from the context (which is backend/MuchToDo)
-COPY go.mod go.sum ./
+# Point to the specific folder paths from the root
+COPY backend/MuchToDo/go.mod backend/MuchToDo/go.sum ./
 RUN go mod download
 
-# Copy all source files from the context into /app
-COPY . .
+# Copy everything from that specific folder into /app
+COPY backend/MuchToDo/ .
 
-# Explicitly build the main.go file. 
-# If your main file is named something else (e.g., server.go), change 'main.go' to that name.
+# Now build the local package
 RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 
 # Run Stage
