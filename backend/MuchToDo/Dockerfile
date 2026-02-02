@@ -13,7 +13,7 @@ COPY backend/MuchToDo/ .
 RUN go mod tidy
 
 # Now the build will succeed
-RUN CGO_ENABLED=0 GOOS=linux go build -o main ./...
+RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd/api/main.go
 
 # Run Stage
 FROM alpine:latest
