@@ -1,9 +1,9 @@
-name: Backend CI/CD Pipeline
+name: App CI/CD Pipeline (Backend & Frontend)
 
 on:
   push:
     branches: [ "master" ]
-    
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -24,6 +24,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
+    # --- BACKEND SECTION ---
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
@@ -34,12 +35,19 @@ jobs:
         ECR_REPOSITORY: starttech-backend-v2
         IMAGE_TAG: latest
       run: |
-        # Build using the root directory (.) as context
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f backend/MuchToDo/Dockerfile .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Update ECS Service
       run: |
-        CLUSTER_NAME=$(terraform output -raw ecs_cluster_name)
-        SERVICE_NAME=$(terraform output -raw ecs_service_name)
-        aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --force-new-deployment
+        # We use variables here. Ensure these match your Terraform naming.
+        aws ecs update-service --cluster starttech-cluster --service starttech-service --force-new-deployment
+
+    # --- FRONTEND SECTION ---
+    - name: Deploy Frontend to S3
+      env:
+        BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET }}
+      run: |
+        # This assumes your frontend files are in a folder named 'frontend'
+        # Adjust the path './frontend' if your files are in a different folder
+        aws s3 sync ./frontend s3://$BUCKET_NAME --delete
