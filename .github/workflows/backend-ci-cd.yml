@@ -41,7 +41,7 @@ jobs:
     - name: Update ECS Service
       run: |
         # We use variables here. Ensure these match your Terraform naming.
-        aws ecs update-service --cluster starttech-cluster --service starttech-service --force-new-deployment
+        aws ecs update-service --cluster starttech-cluster --service starttech-service-v2 --force-new-deployment
 
     # --- FRONTEND SECTION ---
     - name: Deploy Frontend to S3
