@@ -9,7 +9,10 @@ RUN go mod download
 # Copy your source code into /app
 COPY backend/MuchToDo/ .
 
-# The 'magic' recursive build that finds your main.go automatically
+# This tells the container to fix its own dependencies during the build
+RUN go mod tidy
+
+# Now the build will succeed
 RUN CGO_ENABLED=0 GOOS=linux go build -o main ./...
 
 # Run Stage
